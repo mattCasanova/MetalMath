@@ -11,6 +11,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class Vector3D;
+
 @interface Vector2D : NSObject
 
 @property (nonatomic) float x;
@@ -21,6 +23,8 @@
 
 - (_Nonnull instancetype) init;
 - (_Nonnull instancetype) initX:(float)x y:(float)y;
+- (_Nonnull instancetype) initVector2D:(const Vector2D* _Nonnull)vector;
+- (_Nonnull instancetype) initVector3D:(const Vector3D* _Nonnull)vector;
 - (_Nonnull instancetype) initWithRotation:(float)radians;
 - (_Nonnull instancetype) copy;
 
@@ -31,6 +35,7 @@
 
 - (float)                 x;
 - (float)                 y;
+- (float)                 angle;
 
 - (Vector2D* _Nonnull)    addToSelf:(const Vector2D* _Nonnull)rhs;
 - (Vector2D* _Nonnull)    subtractFromSelf:(const Vector2D* _Nonnull)rhs;

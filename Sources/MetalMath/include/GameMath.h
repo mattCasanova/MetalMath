@@ -13,11 +13,16 @@
 
 @interface GameMath: NSObject
 
+@property (nonatomic, readonly) float epsilon;
+@property (nonatomic, readonly) float pi;
+@property (nonatomic, readonly) float halfPi;
+@property (nonatomic, readonly) float twoPi;
 
 + (float)     epsilon;
 + (float)     pi;
 + (float)     halfPi;
 + (float)     twoPi;
+
 + (float)     toRadianFromDegree:(float) degree;
 + (float)     toDegreeFromRadian:(float) radian;
 

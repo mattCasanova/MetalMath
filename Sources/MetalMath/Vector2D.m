@@ -9,9 +9,10 @@
 #import "Vector2D.h"
 #import <GLKit/GLKMath.h>
 #import "GameMath.h"
+#import "Vector3D.h"
 
 @implementation Vector2D  {
-  @private GLKVector2 glkVector2;
+@private GLKVector2 glkVector2;
 }
 
 
@@ -24,12 +25,12 @@
  */
 /******************************************************************************/
 - (_Nonnull instancetype)init {
-    self = [super init];
-    if (self == nil)
-        return self;
-    
-    memset(&glkVector2, 0, sizeof(glkVector2));
+  self = [super init];
+  if (self == nil)
     return self;
+  
+  memset(&glkVector2, 0, sizeof(glkVector2));
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -38,7 +39,7 @@
  \param x
  The value of x
  
-\param y
+ \param y
  The value of y
  
  \return
@@ -46,23 +47,43 @@
  */
 /******************************************************************************/
 - (_Nonnull instancetype)initX:(float)x y:(float)y {
-    self = [super init];
-    if (self == nil)
-        return self;
-    
-    glkVector2.x = x;
-    glkVector2.y = y;
+  self = [super init];
+  if (self == nil)
     return self;
+  
+  glkVector2.x = x;
+  glkVector2.y = y;
+  return self;
+}
+
+
+- (_Nonnull instancetype) initVector2D:(const Vector2D* _Nonnull)vector {
+  self = [super init];
+  if (self == nil)
+    return self;
+  
+  glkVector2.x = vector.x;
+  glkVector2.y = vector.y;
+  return self;
+}
+- (_Nonnull instancetype) initVector3D:(const Vector3D* _Nonnull)vector {
+  self = [super init];
+  if (self == nil)
+    return self;
+  
+  glkVector2.x = vector.x;
+  glkVector2.y = vector.y;
+  return self;
 }
 
 - (_Nonnull instancetype) initWithRotation:(float)radians {
-    self = [super init];
-    if (self == nil)
-        return self;
-    
-    glkVector2.x = cosf(radians);
-    glkVector2.y = sinf(radians);
+  self = [super init];
+  if (self == nil)
     return self;
+  
+  glkVector2.x = cosf(radians);
+  glkVector2.y = sinf(radians);
+  return self;
 }
 
 /******************************************************************************/
@@ -74,9 +95,9 @@
  */
 /******************************************************************************/
 - (_Nonnull instancetype)copy {
-    Vector2D* copy = [[Vector2D alloc] init];
-    copy->glkVector2 = self->glkVector2;
-    return copy;
+  Vector2D* copy = [[Vector2D alloc] init];
+  copy->glkVector2 = self->glkVector2;
+  return copy;
 }
 /******************************************************************************/
 /*!
@@ -94,9 +115,9 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull)setX:(float)x andY:(float)y {
-    glkVector2.x = x;
-    glkVector2.y = y;
-    return self;
+  glkVector2.x = x;
+  glkVector2.y = y;
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -108,7 +129,7 @@
  */
 /******************************************************************************/
 - (void)setX:(float)x {
-    glkVector2.x = x;
+  glkVector2.x = x;
 }
 /******************************************************************************/
 /*!
@@ -119,12 +140,12 @@
  */
 /******************************************************************************/
 - (void)setY:(float)y {
-    glkVector2.y = y;
+  glkVector2.y = y;
 }
 
 - (void)setRotation:(float)radians {
-    glkVector2.x = cosf(radians);
-    glkVector2.y = sinf(radians);
+  glkVector2.x = cosf(radians);
+  glkVector2.y = sinf(radians);
 }
 
 /******************************************************************************/
@@ -136,7 +157,7 @@
  */
 /******************************************************************************/
 - (float) x {
-    return glkVector2.x;
+  return glkVector2.x;
 }
 /******************************************************************************/
 /*!
@@ -147,7 +168,7 @@
  */
 /******************************************************************************/
 - (float) y {
-    return glkVector2.y;
+  return glkVector2.y;
 }
 /******************************************************************************/
 /*!
@@ -158,12 +179,12 @@
  
  \return
  self
-
+ 
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) addToSelf:(const Vector2D* _Nonnull)rhs {
-    glkVector2 = GLKVector2Add(glkVector2, rhs->glkVector2);
-    return self;
+  glkVector2 = GLKVector2Add(glkVector2, rhs->glkVector2);
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -179,8 +200,8 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) subtractFromSelf:(const Vector2D* _Nonnull)rhs {
-    glkVector2 = GLKVector2Subtract(glkVector2, rhs->glkVector2);
-    return self;
+  glkVector2 = GLKVector2Subtract(glkVector2, rhs->glkVector2);
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -194,8 +215,8 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) scaleSelf:(float)scale {
-    glkVector2 = GLKVector2MultiplyScalar(glkVector2, scale);
-    return self;
+  glkVector2 = GLKVector2MultiplyScalar(glkVector2, scale);
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -207,8 +228,8 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) negateSelf {
-    glkVector2 = GLKVector2Negate(glkVector2);
-    return self;
+  glkVector2 = GLKVector2Negate(glkVector2);
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -223,13 +244,13 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) normalizeSelf {
-    glkVector2 = GLKVector2Normalize(glkVector2);
-    return self;
+  glkVector2 = GLKVector2Normalize(glkVector2);
+  return self;
 }
 /******************************************************************************/
 /*!
  Calculates the projection vector of self onto rhs.
-
+ 
  \attention
  This function will crash if rhs is the zero vector
  
@@ -241,14 +262,14 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) projectSelfOnTo:(const Vector2D* _Nonnull)rhs {
-    /*Projection is (v.w)/(w.w)*w */
-    glkVector2 = GLKVector2Project(glkVector2, rhs->glkVector2);
-    return self;
+  /*Projection is (v.w)/(w.w)*w */
+  glkVector2 = GLKVector2Project(glkVector2, rhs->glkVector2);
+  return self;
 }
 /******************************************************************************/
 /*!
  Calculates the perpendicular projection vector of self onto rhs.
-
+ 
  \attention
  This function will crash if rhs is the zero vector
  
@@ -260,8 +281,8 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) perpendicularProjectSelfOnTo:(const Vector2D* _Nonnull)rhs {
-    Vector2D* projection = [self projectOnTo:rhs];
-    return [self subtractFromSelf:projection];
+  Vector2D* projection = [self projectOnTo:rhs];
+  return [self subtractFromSelf:projection];
 }
 /******************************************************************************/
 /*!
@@ -278,8 +299,8 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) linearInterpolateSelfTo:(const Vector2D* _Nonnull)rhs atTime:(float)t {
-    glkVector2 = GLKVector2Lerp(glkVector2, rhs->glkVector2, t);
-    return self;
+  glkVector2 = GLKVector2Lerp(glkVector2, rhs->glkVector2, t);
+  return self;
 }
 /******************************************************************************/
 /*!
@@ -296,7 +317,7 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) add:(const Vector2D* _Nonnull)rhs {
-    return [[self copy] addToSelf:rhs];
+  return [[self copy] addToSelf:rhs];
 }
 /******************************************************************************/
 /*!
@@ -315,12 +336,12 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) subtract:(const Vector2D* _Nonnull)rhs {
-    return [[self copy] subtractFromSelf:rhs];
+  return [[self copy] subtractFromSelf:rhs];
 }
 /******************************************************************************/
 /*!
  Creates a new vector where the components are scaled
-
+ 
  \param scale
  The value to scale by
  
@@ -330,12 +351,12 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) scale:(float)scale {
-    return [[self copy] scaleSelf:scale];
+  return [[self copy] scaleSelf:scale];
 }
 
 
 - (Vector2D* _Nonnull) negate {
-    return [[self copy] negateSelf];
+  return [[self copy] negateSelf];
 }
 /******************************************************************************/
 /*!
@@ -350,12 +371,12 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) normalize {
-    return [[self copy] normalizeSelf];
+  return [[self copy] normalizeSelf];
 }
 /******************************************************************************/
 /*!
  Calculates the projection vector of self onto rhs.
-
+ 
  \attention
  This function will crash if rhs is the zero vector
  
@@ -367,13 +388,13 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) projectOnTo:(const Vector2D* _Nonnull)rhs {
-    /*Projection is (v.w)/(w.w)*w */
-    return [[self copy] projectSelfOnTo:rhs];
+  /*Projection is (v.w)/(w.w)*w */
+  return [[self copy] projectSelfOnTo:rhs];
 }
 /******************************************************************************/
 /*!
  Calculates the perpendicular projection vector of self onto rhs.
-
+ 
  \attention
  This function will crash if rhs is the zero vector
  
@@ -385,7 +406,7 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) perpendicularProjectOnTo:(const Vector2D* _Nonnull)rhs {
-    return [[self copy] perpendicularProjectSelfOnTo:rhs];
+  return [[self copy] perpendicularProjectSelfOnTo:rhs];
 }
 /******************************************************************************/
 /*!
@@ -402,7 +423,7 @@
  */
 /******************************************************************************/
 - (Vector2D* _Nonnull) linearInterpolateTo:(const Vector2D* _Nonnull)rhs atTime:(float)t {
-    return [[self copy] linearInterpolateSelfTo:rhs atTime:t];
+  return [[self copy] linearInterpolateSelfTo:rhs atTime:t];
 }
 /******************************************************************************/
 /*!
@@ -417,7 +438,7 @@
  */
 /******************************************************************************/
 - (float) crossZ:(const Vector2D* _Nonnull)rhs {
-    return (glkVector2.x * rhs->glkVector2.y) - (rhs->glkVector2.x * glkVector2.y);
+  return (glkVector2.x * rhs->glkVector2.y) - (rhs->glkVector2.x * glkVector2.y);
 }
 /******************************************************************************/
 /*!
@@ -431,18 +452,18 @@
  */
 /******************************************************************************/
 - (float) dot:(const Vector2D* _Nonnull)rhs {
-    return GLKVector2DotProduct(glkVector2, rhs->glkVector2);
+  return GLKVector2DotProduct(glkVector2, rhs->glkVector2);
 }
 /******************************************************************************/
 /*!
  Returns the length of the vector.
-
+ 
  \return
  The length of the vector.
  */
 /******************************************************************************/
 - (float) length {
-    return GLKVector2Length(glkVector2);
+  return GLKVector2Length(glkVector2);
 }
 /******************************************************************************/
 /*!
@@ -453,7 +474,7 @@
  */
 /******************************************************************************/
 - (float) lengthSquared {
-    return GLKVector2DotProduct(glkVector2, glkVector2);
+  return GLKVector2DotProduct(glkVector2, glkVector2);
 }
 /******************************************************************************/
 /*!
@@ -464,13 +485,13 @@
  
  \param rhs
  The point to get the distance from
-
+ 
  \return
  The distance between to points.
  */
 /******************************************************************************/
 - (float) distanceTo:(const Vector2D* _Nonnull)rhs {
-    return GLKVector2Distance(glkVector2, rhs->glkVector2);
+  return GLKVector2Distance(glkVector2, rhs->glkVector2);
 }
 /******************************************************************************/
 /*!
@@ -487,11 +508,11 @@
  */
 /******************************************************************************/
 - (float) distanceSquaredTo:(const Vector2D* _Nonnull)rhs {
-    return GLKVector2DotProduct(glkVector2, rhs->glkVector2);
+  return GLKVector2DotProduct(glkVector2, rhs->glkVector2);
 }
 
-- (float) getAngle {
-    return atan2f(glkVector2.x, glkVector2.y);
+- (float) angle {
+  return atan2f(glkVector2.y, glkVector2.x);
 }
 
 /******************************************************************************/
@@ -507,7 +528,7 @@
  */
 /******************************************************************************/
 - (bool) isVectorEqual:(const Vector2D* _Nonnull)rhs {
-    return (fabsf(glkVector2.x - rhs->glkVector2.x) < GameMath.epsilon && fabsf(glkVector2.y - rhs->glkVector2.y) < GameMath.epsilon);
+  return (fabsf(glkVector2.x - rhs->glkVector2.x) < GameMath.epsilon && fabsf(glkVector2.y - rhs->glkVector2.y) < GameMath.epsilon);
 }
 /******************************************************************************/
 /*!
@@ -521,7 +542,7 @@
  */
 /******************************************************************************/
 - (bool) isVectorNotEqual:(const Vector2D* _Nonnull)rhs {
-    return ![self isEqual:rhs];
+  return ![self isEqual:rhs];
 }
 /******************************************************************************/
 /*!
@@ -532,8 +553,8 @@
  */
 /******************************************************************************/
 - (bool) isZero {
-    /*Test if they are really close to zero*/
-    return (fabsf(glkVector2.x) < GameMath.epsilon && fabsf(glkVector2.y) < GameMath.epsilon);
+  /*Test if they are really close to zero*/
+  return (fabsf(glkVector2.x) < GameMath.epsilon && fabsf(glkVector2.y) < GameMath.epsilon);
 }
 
 @end
