@@ -69,6 +69,14 @@
 /******************************************************************************/
 + (float) wrapFloat:(float)value betweenLow:(float)low andHigh:(float)high {
     if (value < low)
+        return high + (value - low);
+    else if (value > high)
+        return low + (value - high);
+    
+    return value;
+}
++ (float) wrapEdgeFloat:(float)value betweenLow:(float)low andHigh:(float)high {
+    if (value < low)
         return high;
     else if (value > high)
         return low;
@@ -190,7 +198,7 @@
  A number between low and high (inclusive).
  */
 /******************************************************************************/
-+ (NSInteger) wrapInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high {
++ (NSInteger) wrapEdgeInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high {
     if (value < low)
         return high;
     else if (value > high)

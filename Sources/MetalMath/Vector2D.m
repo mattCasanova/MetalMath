@@ -508,7 +508,10 @@
  */
 /******************************************************************************/
 - (float) distanceSquaredTo:(const Vector2D* _Nonnull)rhs {
-  return GLKVector2DotProduct(glkVector2, rhs->glkVector2);
+  
+  Vector2D* diff = [self subtract:rhs];
+  
+  return [diff lengthSquared];
 }
 
 - (float) angle {

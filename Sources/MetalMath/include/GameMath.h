@@ -28,13 +28,14 @@
 
 + (float)     clampFloat:(float)value betweenLow:(float)low andHigh:(float)high;
 + (float)     wrapFloat:(float)value betweenLow:(float)low andHigh:(float)high;
++ (float)     wrapEdgeFloat:(float)value betweenLow:(float)low andHigh:(float)high;
 + (float)     maxFloat:(float)x y:(float)y;
 + (float)     minFloat:(float)x y:(float)y;
 + (bool)      isFloatInRange:(float)value betweenLow:(float)low andHigh:(float)high;
 + (bool)      isFloatEqual:(float)x y:(float)y;
 
 + (NSInteger) clampInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high;
-+ (NSInteger) wrapInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high;
++ (NSInteger) wrapEdgeInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high;
 + (NSInteger) maxInt:(NSInteger)x y:(NSInteger)y;
 + (NSInteger) minInt:(NSInteger)x y:(NSInteger)y;
 + (bool)      isIntInRange:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high;
