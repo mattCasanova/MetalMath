@@ -7,7 +7,7 @@
 
 #import "Distance.h"
 #import "Vector2D.h"
-#import "GameMath.h"
+#import "MetalMath.h"
 
 #import <GLKit/GLKMath.h>
 
@@ -31,8 +31,8 @@
   
   /* Find the closest point on the rect */
   Vector2D* closestPointOnAABB = [[Vector2D alloc] init];
-  closestPointOnAABB.x = [GameMath clampFloat:pointInAABBSpace.x betweenLow:-halfWidth andHigh:halfWidth];
-  closestPointOnAABB.y = [GameMath clampFloat:pointInAABBSpace.y betweenLow:-halfHeight andHigh:halfHeight];
+  closestPointOnAABB.x = [Math floatClamp:pointInAABBSpace.x low:-halfWidth high:halfWidth];
+  closestPointOnAABB.y = [Math floatClamp:pointInAABBSpace.y low:-halfHeight high:halfHeight];
   
   float distance = [pointInAABBSpace distanceTo:closestPointOnAABB];
   
@@ -53,7 +53,7 @@
   float lineLengthSquared = lineVector.lengthSquared;
   
   //If the line length is very small, we consider it a point
-  if (lineLengthSquared <= (GameMath.epsilon * GameMath.epsilon))
+  if (lineLengthSquared <= (Math.epsilon * Math.epsilon))
     return [vectorToPoint length];
   
   
@@ -72,7 +72,7 @@
   float distanceToLineSquared = [vectorToPoint lengthSquared] - (projectedLength * projectedLength);
   
   //Account for floating point error
-  if (distanceToLineSquared < 0.f || fabsf(distanceToLineSquared) <= GameMath.epsilon)
+  if (distanceToLineSquared < 0.f || fabsf(distanceToLineSquared) <= Math.epsilon)
     return 0.f;
   
   return sqrtf(distanceToLineSquared);

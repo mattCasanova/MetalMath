@@ -6,22 +6,36 @@
 //  Copyright © 2020 Matt Casanova. All rights reserved.
 //
 
-#import "GameMath.h"
+#import "MetalMath.h"
 
-@implementation GameMath
+@implementation Math
+
+static const float EPSILON              = 0.00001f;
+static const float PI                   = 3.14159265358979f;
+static const float PI_OVER_SIX          = PI / 6;
+static const float PI_OVER_FOUR         = PI / 4;
+static const float PI_OVER_THREE        = PI / 3;
+static const float PI_OVER_TWO          = 1.5707963267949f;
+static const float TWO_PI               = 6.28318530717959f;
+
+static const float TO_RADIAN_CONVERSION = PI / 180;
+static const float TO_DEGREE_CONVERSION = 180 / PI;
 
 /*! The smallest value between two floats*/
-+ (float) epsilon                           { return  0.00001f; }
-/*! The value of PI*/
-+ (float) pi                                { return 3.14159265358979f; }
-/*! The Value of PI / 2*/
-+ (float) halfPi                            { return 1.5707963267949f; }
- /*! The value of 2 * PI*/
-+ (float) twoPi                             { return 6.28318530717959f; }
++ (float) epsilon     { return EPSILON;       }
+
++ (float) pi          { return PI;            }
++ (float) piOverSix   { return PI_OVER_SIX;   }
++ (float) piOverFour  { return PI_OVER_FOUR;  }
++ (float) piOverThree { return PI_OVER_THREE; }
++ (float) piOverTwo   { return PI_OVER_TWO;   }
++ (float) twoPi       { return TWO_PI;        }
+
+
 /*! The conversion factor of degree to Radian*/
-+ (float) toRadianFromDegree:(float) degree { return degree * 0.01745329251994f; }
++ (float) toRadian:(float) degree { return degree * TO_RADIAN_CONVERSION; }
 /*! The conversion factor of radian to degree*/
-+ (float) toDegreeFromRadian:(float) radian { return radian * 57.29577951308233f; }
++ (float) toDegree:(float) radian { return radian * TO_DEGREE_CONVERSION; }
 
 /******************************************************************************/
 /*!
@@ -41,11 +55,37 @@
   A number between low and high (inclusive).
 */
 /******************************************************************************/
-+ (float) clampFloat:(float)value betweenLow:(float)low andHigh:(float)high {
++ (float) floatClamp:(float)value low:(float)low high:(float)high {
     if (value < low)
         return low;
     else if (value > high)
         return high;
+    
+    return value;
+}
+/******************************************************************************/
+/*!
+ Wraps the given value around the range from low to high. Will wrap
+ multiple times if needed.
+ 
+ \param value
+ The value to wrap.
+ 
+ \param low
+ The lowest possible value to wrap.
+ 
+ \param high
+ The highest possible value to wrap.
+ 
+ \return
+ A number between low and high (inclusive).
+ */
+/******************************************************************************/
++ (float) floatWrap:(float)value low:(float)low high:(float)high {
+    if (value < low)
+        return [Math floatWrap:(high + value - low) low:low high:high];
+    else if (value > high)
+        return [Math floatWrap:(low + value - high) low:low high:high];
     
     return value;
 }
@@ -67,55 +107,13 @@
  A number between low and high (inclusive).
  */
 /******************************************************************************/
-+ (float) wrapFloat:(float)value betweenLow:(float)low andHigh:(float)high {
-    if (value < low)
-        return high + (value - low);
-    else if (value > high)
-        return low + (value - high);
-    
-    return value;
-}
-+ (float) wrapEdgeFloat:(float)value betweenLow:(float)low andHigh:(float)high {
++ (float) floatWrapEdge:(float)value low:(float)low high:(float)high {
     if (value < low)
         return high;
     else if (value > high)
         return low;
     
     return value;
-}
-/******************************************************************************/
-/*!
- Returns the larger value of x and y;
- 
- \param x
- The first value to check.
- 
- \param y
- The second value to check.
- 
- \return
- The larger value of x and y.
- */
-/******************************************************************************/
-+ (float) maxFloat:(float)x y:(float)y {
-    return (x > y) ? x : y;
-}
-/******************************************************************************/
-/*!
- Returns the smaller value of x and y;
- 
- \param x
- The first value to check.
- 
- \param y
- The second value to check.
- 
- \return
- The smaller value of x and y.
- */
-/******************************************************************************/
-+ (float) minFloat:(float)x y:(float)y {
-    return (x < y) ? x : y;
 }
 /******************************************************************************/
 /*!
@@ -134,7 +132,7 @@
  True if x is in the range, false otherwise.
  */
 /******************************************************************************/
-+ (bool) isFloatInRange:(float)value betweenLow:(float)low andHigh:(float)high {
++ (bool) floatIsInRange:(float)value low:(float)low high:(float)high {
     return (value >= low && value <= high);
 }
 /******************************************************************************/
@@ -151,8 +149,8 @@
  True if the values are equal within EPSILON, false otherwise.
  */
 /******************************************************************************/
-+ (bool) isFloatEqual:(float)x y:(float)y {
-    return (fabsf(x - y) < GameMath.epsilon);
++ (bool) floatIsEqual:(float)x y:(float)y {
+    return (fabsf(x - y) < Math.epsilon);
 }
 /******************************************************************************/
 /*!
@@ -172,12 +170,38 @@
   A number between low and high (inclusive).
 */
 /******************************************************************************/
-+ (NSInteger) clampInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high {
++ (NSInteger) intClamp:(NSInteger)value low:(NSInteger)low high:(NSInteger)high {
     if (value < low)
         return low;
     else if (value > high)
         return high;
 
+    return value;
+}
+/******************************************************************************/
+/*!
+ Wraps the given value around the range from low to high. Will wrap
+ multiple times if needed.
+ 
+ \param value
+ The value to wrap.
+ 
+ \param low
+ The lowest possible value to wrap.
+ 
+ \param high
+ The highest possible value to wrap.
+ 
+ \return
+ A number between low and high (inclusive).
+ */
+/******************************************************************************/
++ (NSInteger) intWrap:(NSInteger)value low:(NSInteger)low high:(NSInteger)high {
+    if (value < low)
+        return [Math intWrap:(high + value - low) low:low high:high];
+    else if (value > high)
+        return [Math intWrap:(low + value - high) low:low high:high];
+    
     return value;
 }
 /******************************************************************************/
@@ -198,47 +222,13 @@
  A number between low and high (inclusive).
  */
 /******************************************************************************/
-+ (NSInteger) wrapEdgeInt:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high {
++ (NSInteger) intWrapEdge:(NSInteger)value low:(NSInteger)low high:(NSInteger)high {
     if (value < low)
         return high;
     else if (value > high)
         return low;
     
     return value;
-}
-/******************************************************************************/
-/*!
- Returns the larger value of x and y;
- 
- \param x
- The first value to check.
- 
- \param y
- The second value to check.
- 
- \return
- The larger value of x and y.
- */
-/******************************************************************************/
-+ (NSInteger) maxInt:(NSInteger)x y:(NSInteger) y {
-    return (x > y) ? x : y;
-}
-/******************************************************************************/
-/*!
- Returns the smaller value of x and y;
- 
- \param x
- The first value to check.
- 
- \param y
- The second value to check.
- 
- \return
- The smaller value of x and y.
- */
-/******************************************************************************/
-+ (NSInteger) minInt:(NSInteger)x y:(NSInteger)y {
-    return (x < y) ? x : y;
 }
 /******************************************************************************/
 /*!
@@ -257,7 +247,7 @@
  True if x is in the range, false otherwise.
  */
 /******************************************************************************/
-+ (bool) isIntInRange:(NSInteger)value betweenLow:(NSInteger)low andHigh:(NSInteger)high {
++ (bool) intIsInRange:(NSInteger)value low:(NSInteger)low high:(NSInteger)high {
     return (value >= low && value <= high);
 }
 /******************************************************************************/
@@ -272,7 +262,7 @@
  True if the number is a power of two.  false otherwise.
  */
 /******************************************************************************/
-+ (bool) isPowerOf2:(NSInteger) x {
++ (bool) isPowerOfTwo:(NSInteger) x {
     /*make sure it is a positive number
      Then, since a power of two only has one bit turned on, if we subtract 1 and
      then and them together no bits should be turned on.*/
@@ -289,7 +279,7 @@
  The next largest power of two.
  */
 /******************************************************************************/
-+ (NSInteger) getNextPowerOf2:(NSInteger) x {
++ (NSInteger) nextPowerOfTwo:(NSInteger) x {
     /*Turn on all of the bits lower than the highest on bit.  Then add one.  It
      will be a power of two.*/
     /*--x;*/
