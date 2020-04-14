@@ -5,19 +5,19 @@
 //  Created by Matt Casanova on 4/4/20.
 //
 
-import MetalTypes
+import simd
 
 public class Intersect {
     /**
      
      */
-    public static func pointCircle(point: Vector2D, circle: Vector2D, radius: Float) -> Bool {
-        return point.distanceSquared(to: circle) - (radius * radius) < epsilon
+    public static func pointCircle(point: simd_float2, circle: simd_float2, radius: Float) -> Bool {
+        return simd_length_squared(point - circle) - (radius * radius) < epsilon
     }
     /**
      
      */
-    public static func pointAABB(point: Vector2D, center: Vector2D, width: Float, height: Float) -> Bool {
+    public static func pointAABB(point: simd_float2, center: simd_float2, width: Float, height: Float) -> Bool {
         let halfWidth = width / 2
         let halfHeight = height / 2
         
@@ -25,36 +25,34 @@ public class Intersect {
         let adjustedPoint = point - center
         
         //If the new point is inside the rect, it is intersecting
-        return adjustedPoint.x > -halfWidth &&
-            adjustedPoint.x < halfWidth &&
-            adjustedPoint.y > -halfHeight &&
-            adjustedPoint.y < halfHeight
+        return isInRange(value: adjustedPoint.x, low: -halfWidth, high: halfWidth) &&
+            isInRange(value: adjustedPoint.y, low: -halfHeight, high: halfHeight)
     }
     /**
      
      */
-    public static func pointLineSegment(point: Vector2D, start: Vector2D, end: Vector2D) -> Bool {
+    public static func pointLineSegment(point: simd_float2, start: simd_float2, end: simd_float2) -> Bool {
         let lineVector = end - start
         let pointLineVector = point - start
         
         //If the sin of the angle between the two vectors in greater than zero, we know the point isn't on the line
-        if abs(lineVector.crossZ(pointLineVector)) > epsilon{
+        if (abs(simd_cross(lineVector, pointLineVector).z) > epsilon) {
             return false
         }
         
-        let projectedLength = pointLineVector.dot(lineVector.normalize())
-        return projectedLength > 0 && (projectedLength*projectedLength) <= lineVector.lengthSquared
+        let projectedLength = simd_dot(pointLineVector, simd_normalize(lineVector))
+        return isInRange(value: simd_length_squared(lineVector), low: 0, high: (projectedLength*projectedLength))
     }
     /**
      
      */
-    public static func circleCircle(center1: Vector2D, center2: Vector2D, radius1: Float, radius2: Float) -> Bool {
+    public static func circleCircle(center1: simd_float2, center2: simd_float2, radius1: Float, radius2: Float) -> Bool {
         return pointCircle(point: center1, circle: center2, radius: radius1 + radius2)
     }
     /**
      
      */
-    public static func circleAABB(circleCenter: Vector2D, radius: Float, aabbCenter: Vector2D, width: Float, height: Float) -> Bool {
+    public static func circleAABB(circleCenter: simd_float2, radius: Float, aabbCenter: simd_float2, width: Float, height: Float) -> Bool {
         /* We are given full width and height, but we only need half width/height */
         let halfWidth = width / 2
         let halfHeight = height / 2
@@ -65,38 +63,33 @@ public class Intersect {
         let adjustedPoint = circleCenter - aabbCenter
         
         /* Find the closest point on the rect */
-        let closestPoint = Vector2D(
-            clamp(value: adjustedPoint.x, low: -halfWidth, high: halfWidth),
-            clamp(value: adjustedPoint.y, low: -halfHeight, high: halfHeight)
-        )
+        let closestPoint = simd_clamp(adjustedPoint, simd_float2(-halfWidth, -halfHeight), simd_float2(halfWidth, halfHeight))
         
-        if adjustedPoint.x < halfWidth &&
-            adjustedPoint.x > -halfWidth &&
-            adjustedPoint.y < halfHeight &&
-            adjustedPoint.y > -halfHeight {
-            
+
+        if isInRange(value: adjustedPoint.x, low: -halfWidth, high: halfWidth) &&
+            isInRange(value: adjustedPoint.y, low: -halfHeight, high: halfHeight) {
             return true
         }
         
-        return adjustedPoint.distanceSquared(to: closestPoint) < (radius*radius)
+        return simd_length_squared(adjustedPoint - closestPoint) < (radius*radius)
     }
     /**
      
      */
-    public static func circleLineSegment(center: Vector2D, radius: Float, start: Vector2D, end: Vector2D) -> Bool {
+    public static func circleLineSegment(center: simd_float2, radius: Float, start: simd_float2, end: simd_float2) -> Bool {
         let lineVector = end - start
         let pointLineVector = center - start
         
-        let projectedLength = pointLineVector.dot(lineVector.normalize())
+        let projectedLength = simd_dot(pointLineVector, simd_normalize(lineVector))
         
         let adjustedStartLength = projectedLength + radius
         let adjustedEndLength = projectedLength - radius
         
-        if adjustedStartLength < 0 || (adjustedEndLength*adjustedEndLength) > lineVector.lengthSquared {
+        if adjustedStartLength < 0 || (adjustedEndLength*adjustedEndLength) > simd_length_squared(lineVector) {
             return false
         }
         
-        let pointLineLengthSquared = pointLineVector.lengthSquared
+        let pointLineLengthSquared = simd_length_squared(pointLineVector)
         
         //Use pathagorean theorem to get length of third side and compare with radius
         return (pointLineLengthSquared - (projectedLength*projectedLength)) < (radius*radius)
@@ -104,7 +97,7 @@ public class Intersect {
     /**
      
      */
-    public static func aabbAABB(center1: Vector2D, width1: Float, height1: Float, center2: Vector2D, width2: Float, height2: Float) -> Bool {
+    public static func aabbAABB(center1: simd_float2, width1: Float, height1: Float, center2: simd_float2, width2: Float, height2: Float) -> Bool {
         return Intersect.pointAABB(point: center1, center: center2, width: width1 + width2, height: height1 + height2)
     }
     
