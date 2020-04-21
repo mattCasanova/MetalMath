@@ -17,6 +17,13 @@ public class Intersect {
     /**
      
      */
+    public static func pointCircle(point: simd_float2, circle: Circle) -> Bool {
+        return simd_length_squared(point - circle.center) - (circle.radius * circle.radius) < epsilon
+    }
+    
+    /**
+     
+     */
     public static func pointAABB(point: simd_float2, center: simd_float2, width: Float, height: Float) -> Bool {
         let halfWidth = width / 2
         let halfHeight = height / 2
@@ -47,7 +54,15 @@ public class Intersect {
      
      */
     public static func circleCircle(center1: simd_float2, center2: simd_float2, radius1: Float, radius2: Float) -> Bool {
-        return pointCircle(point: center1, circle: center2, radius: radius1 + radius2)
+        let radius = radius1 + radius2
+        return simd_length_squared(center1 - center2) - (radius * radius) < epsilon
+    }
+    /**
+     
+     */
+    public static func circleCircle(_ first: Circle, _ second: Circle) -> Bool {
+        let radius = first.radius + second.radius
+        return simd_length_squared(first.center - second.center) - (radius * radius) < epsilon
     }
     /**
      
@@ -65,7 +80,7 @@ public class Intersect {
         /* Find the closest point on the rect */
         let closestPoint = simd_clamp(adjustedPoint, simd_float2(-halfWidth, -halfHeight), simd_float2(halfWidth, halfHeight))
         
-
+        
         if isInRange(value: adjustedPoint.x, low: -halfWidth, high: halfWidth) &&
             isInRange(value: adjustedPoint.y, low: -halfHeight, high: halfHeight) {
             return true

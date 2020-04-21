@@ -8,6 +8,10 @@
 import simd
 
 public extension simd_float3 {
+    var xy: simd_float2 {
+        get { simd_float2(x, y) }
+    }
+    
     var r: Float {
         get { x }
         set { x = newValue }
@@ -34,13 +38,19 @@ public extension simd_float3 {
     }
     
     mutating func set(repeating: Float) {
-           self.x = repeating
-           self.y = repeating
-           self.z = repeating
-       }
+        self.x = repeating
+        self.y = repeating
+        self.z = repeating
+    }
+    
+    func to4D(_ w: Float = 0) -> simd_float4 {
+        return simd_float4(x, y, z, w)
+    }
 }
 
 public func simd_epsilon_equal(lhs: simd_float3, rhs: simd_float3) -> Bool {
     let diff = simd_abs(lhs - rhs)
     return diff.x < epsilon && diff.y < epsilon && diff.z < epsilon
 }
+
+

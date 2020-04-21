@@ -46,7 +46,13 @@ public extension simd_float2 {
           self.y = repeating
       }
     
+    func to3D(_ z: Float = 0) -> simd_float3 {
+        return simd_float3(x, y, z)
+    }
     
+    func to4D(z: Float, w: Float) -> simd_float4 {
+        return simd_float4(x, y, z, w)
+    }
     
 }
 
