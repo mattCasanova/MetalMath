@@ -33,11 +33,42 @@ public extension simd_float4 {
         set { w = newValue }
     }
     
+    var sx: Float {
+        get { x }
+        set { x = newValue }
+    }
+    var su: Float {
+        get { y }
+        set { y = newValue }
+    }
+    var tx: Float {
+        get { z }
+        set { z = newValue }
+    }
+    var ty: Float {
+        get { w }
+        set { w = newValue }
+    }
+    
+    mutating func set(_ x: Float, _ y: Float, _ z: Float, _ w: Float) {
+        self.x = x
+        self.y = y
+        self.z = z
+        self.w = w
+    }
+    
     mutating func set(r: Float, g: Float, b: Float, a: Float) {
         self.x = r
         self.y = g
         self.z = b
         self.w = a
+    }
+    
+    mutating func set(sx: Float, sy: Float, tx: Float, ty: Float) {
+        self.x = sx
+        self.y = sy
+        self.z = tx
+        self.w = ty
     }
     
     mutating func set(repeating: Float) {

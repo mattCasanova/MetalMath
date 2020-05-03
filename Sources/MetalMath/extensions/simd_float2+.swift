@@ -7,25 +7,54 @@
 
 import simd
 
+/**
+ Extension for simd_float2 that adds some conveniance methods for setting or converting
+ between types
+ */
 public extension simd_float2 {
+
+    /* The angle between this vector and the x axis */
+    
     var angle: Float { get { atan2(y, x) } }
+    
+    /**
+     Conveniance access for getting the u component when treating this like a texture coordinate
+     */
     var u: Float {
         get { x }
         set { x = newValue }
     }
+    /**
+     Conveniance access for getting the v component when treating this like a texture coordinate
+     */
     var v: Float {
         get { y }
         set { y = newValue }
     }
-    
+    /**
+     Construct a vector from an angle
+     
+     - parameters:
+        - angle: The desired angle between this vector and the x axis
+     */
     init(angle: Float) {
         self.init(cos(angle), sin(angle))
     }
-    
+    /**
+     Construct a 2D point/vector from a 3D point/vector
+     
+     - important: The z component of the input will be lost
+     
+     - parameters:
+        - simd3: The 3D point/vector to copy from
+     */
     init(simd3: simd_float3) {
         self.init(simd3.x, simd3.y)
     }
-    
+    /**
+     Conveniance setter for setting x and y components from floats in one line.
+     
+     */
     mutating func set(_ x: Float = 0, _ y: Float = 0) {
         self.x = x
         self.y = y
