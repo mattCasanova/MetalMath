@@ -22,9 +22,9 @@ public extension simd_float3 {
     }
     var b: Float {
         get { z }
-        set { x = newValue }
+        set { z = newValue }
     }
-    
+
     mutating func set(_ x: Float = 0, _ y: Float = 0, _ z: Float = 0) {
         self.x = x
         self.y = y
