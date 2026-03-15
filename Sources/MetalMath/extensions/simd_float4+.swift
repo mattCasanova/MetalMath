@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Matt Casanova on 4/15/20.
 //
@@ -8,14 +8,10 @@
 import simd
 
 public extension simd_float4 {
-    var xyz: simd_float3 {
-        get { simd_float3(x, y, z) }
-    }
-    
-    var rgb: simd_float3 {
-        get { simd_float3(x, y, z) }
-    }
-    
+    var xyz: simd_float3 { simd_float3(x, y, z) }
+
+    var rgb: simd_float3 { simd_float3(x, y, z) }
+
     var r: Float {
         get { x }
         set { x = newValue }
@@ -32,7 +28,7 @@ public extension simd_float4 {
         get { w }
         set { w = newValue }
     }
-    
+
     var sx: Float {
         get { x }
         set { x = newValue }
@@ -49,28 +45,28 @@ public extension simd_float4 {
         get { w }
         set { w = newValue }
     }
-    
+
     mutating func set(_ x: Float, _ y: Float, _ z: Float, _ w: Float) {
         self.x = x
         self.y = y
         self.z = z
         self.w = w
     }
-    
+
     mutating func set(r: Float, g: Float, b: Float, a: Float) {
         self.x = r
         self.y = g
         self.z = b
         self.w = a
     }
-    
+
     mutating func set(sx: Float, sy: Float, tx: Float, ty: Float) {
         self.x = sx
         self.y = sy
         self.z = tx
         self.w = ty
     }
-    
+
     mutating func set(repeating: Float) {
         self.x = repeating
         self.y = repeating
